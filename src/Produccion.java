@@ -70,22 +70,22 @@ public class Produccion {
         ajustarAnioActual(inventarioPlata, inventarioCobre, inventarioFundente, inventarioAcido, inventarioGas, ventas);
 
         System.out.println("Inventario de Plata Pura:");
-        imprimirArreglo(inventarioPlata, anios, meses);
+        imprimirArreglo(inventarioPlata);
 
         System.out.println("\nInventario de Cobre:");
-        imprimirArreglo(inventarioCobre, anios, meses);
+        imprimirArreglo(inventarioCobre);
 
         System.out.println("\nInventario de Fundente:");
-        imprimirArreglo(inventarioFundente, anios, meses);
+        imprimirArreglo(inventarioFundente);
 
         System.out.println("\nInventario de Ácido:");
-        imprimirArreglo(inventarioAcido, anios, meses);
+        imprimirArreglo(inventarioAcido);
 
         System.out.println("\nInventario de Gas:");
-        imprimirArreglo(inventarioGas, anios, meses);
+        imprimirArreglo(inventarioGas);
 
         System.out.println("\nVentas:");
-        imprimirArreglo(ventas, anios, meses);
+        imprimirArreglo(ventas);
 
         System.out.println("Demanda stacional para el mes actual:");
         System.out.println(calcularDemandaEstacional(ventas, mesActual));
@@ -109,7 +109,7 @@ public class Produccion {
          */
     }
 
-    public static void imprimirArreglo(double[][] Arreglo, int anios, int meses) {
+    public static void imprimirArreglo(double[][] Arreglo) {
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
                 System.out.printf("%8.2f ", Arreglo[i][j]);
@@ -117,9 +117,10 @@ public class Produccion {
             System.out.println();
         }
     }
-    /*
-    public static double[] ordenarInventario(double[][] Arreglo, int anio, int meses) {
 
+    public static double[] ordenarInventario(double[][] Arreglo) {
+
+        return null;
     }
 
     /*
