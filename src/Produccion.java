@@ -49,7 +49,7 @@ public class Produccion {
     public static void main(String[] args) {
 
         int anios = 5;
-        int meses = 12;
+        int meses = 12;//a
 
         double[][] inventarioPlata = new double[anios][meses];
         double[][] inventarioCobre = new double[anios][meses];
