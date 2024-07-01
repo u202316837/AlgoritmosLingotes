@@ -46,7 +46,7 @@ public class Produccion {
     }
 
     public static double calcularDemandaEstacional(double[][] ventas, int mes) {
-        return (int) calcularDemandaMes(ventas, ventas.length - 1, mes) / ventas.length;
+        return (int) calcularDemandaMes(ventas, ventas.length - 1, mes) / (double)ventas.length;
     }
 
     private static double calcularDemandaMes(double[][] ventas, int anio, int mes) {
@@ -92,7 +92,7 @@ public class Produccion {
 
         System.out.println("\nInventario Ordenado:");
         double[] ventasOrdenado = ordenarInventario(ventas);
-        imprimirArreglo1(ventasOrdenado);
+        imprimir(ventasOrdenado);
         /*
         Arreglo con inventario actual
 
@@ -113,9 +113,9 @@ public class Produccion {
          */
     }
 
-    public static void imprimirArreglo1(double[] Arreglo) {
-        for (int i = 0; i < Arreglo.length; i++) {
-            System.out.printf("%8.2f ", Arreglo[i]);
+    public static void imprimir(double[] Arreglo) {
+        for (double elemento:Arreglo) {
+            System.out.printf("%8.2f ", elemento);
             System.out.println();
         }
     }
@@ -153,7 +153,7 @@ public class Produccion {
     }
 
     /*
-    metodo para pronosticar la demanda usando los datos del año pasado
+    metodo para pronosticar la demanda usando los datos del año pasado ver1
      */
     /*
     metodo para calucar la cantidad optima de materiaprima
