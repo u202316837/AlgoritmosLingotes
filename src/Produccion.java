@@ -34,7 +34,7 @@ public class Produccion {
                                          double[][] inventarioFundente, double[][] inventarioAcido,
                                          double[][] inventarioGas, double[][] ventas, int months,
                                          int anioActual, int mesActual) {
-        int baseYear = 2020;
+        int baseYear = 2022;
         int iAnios = anioActual - baseYear;
         for (int i = mesActual; i < months; i++) {
             inventarioPlata[iAnios][i] = 0;
@@ -48,7 +48,7 @@ public class Produccion {
 
     public static void main(String[] args) {
 
-        int anios = 5;
+        int anios = 3;
         int meses = 12;//a
 
         double[][] inventarioPlata = new double[anios][meses];
