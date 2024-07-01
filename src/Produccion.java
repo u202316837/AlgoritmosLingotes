@@ -45,6 +45,17 @@ public class Produccion {
         }
     }
 
+    public static double calcularDemandaEstacional(double[][] ventas, int mes) {
+        return (int) calcularDemandaMes(ventas, ventas.length - 1, mes) / ventas.length;
+    }
+
+    private static double calcularDemandaMes(double[][] ventas, int anio, int mes) {
+        if (anio < 0) {
+            return 0;
+        }
+        return ventas[anio][mes] + calcularDemandaMes(ventas, anio - 1, mes);
+    }
+
     public static void main(String[] args) {
 
         double[][] inventarioPlata = new double[anios][meses];
@@ -59,23 +70,25 @@ public class Produccion {
         ajustarAnioActual(inventarioPlata, inventarioCobre, inventarioFundente, inventarioAcido, inventarioGas, ventas);
 
         System.out.println("Inventario de Plata Pura:");
-        imprimirArreglo(inventarioPlata);
+        imprimirArreglo(inventarioPlata, anios, meses);
 
         System.out.println("\nInventario de Cobre:");
-        imprimirArreglo(inventarioCobre);
+        imprimirArreglo(inventarioCobre, anios, meses);
 
         System.out.println("\nInventario de Fundente:");
-        imprimirArreglo(inventarioFundente);
+        imprimirArreglo(inventarioFundente, anios, meses);
 
         System.out.println("\nInventario de Ácido:");
-        imprimirArreglo(inventarioAcido);
+        imprimirArreglo(inventarioAcido, anios, meses);
 
         System.out.println("\nInventario de Gas:");
-        imprimirArreglo(inventarioGas);
+        imprimirArreglo(inventarioGas, anios, meses);
 
         System.out.println("\nVentas:");
-        imprimirArreglo(ventas);
+        imprimirArreglo(ventas, anios, meses);
 
+        System.out.println("Demanda stacional para el mes actual:");
+        System.out.println(calcularDemandaEstacional(ventas, mesActual));
         /*
         Arreglo con inventario actual
 
@@ -96,7 +109,7 @@ public class Produccion {
          */
     }
 
-    public static void imprimirArreglo(double[][] Arreglo) {
+    public static void imprimirArreglo(double[][] Arreglo, int anios, int meses) {
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
                 System.out.printf("%8.2f ", Arreglo[i][j]);
@@ -104,10 +117,9 @@ public class Produccion {
             System.out.println();
         }
     }
+    /*
+    public static double[] ordenarInventario(double[][] Arreglo, int anio, int meses) {
 
-    public static double[] ordenarInventario(double[][] Arreglo) {
-
-        return null;
     }
 
     /*
