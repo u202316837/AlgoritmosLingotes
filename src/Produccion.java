@@ -48,7 +48,7 @@ public class Produccion {
     public static double calcularDemandaEstacional(double[][] ventas, int mes) {
         return (int) calcularDemandaMes(ventas, ventas.length - 1, mes) / ventas.length;
     }
-
+//hola
     private static double calcularDemandaMes(double[][] ventas, int anio, int mes) {
         if (anio < 0) {
             return 0;
