@@ -45,6 +45,17 @@ public class Produccion {
         }
     }
 
+    public static double calcularDemandaEstacional(double[][] ventas, int mes) {
+        return (int) calcularDemandaMes(ventas, ventas.length - 1, mes) / ventas.length;
+    }
+
+    private static double calcularDemandaMes(double[][] ventas, int anio, int mes) {
+        if (anio < 0) {
+            return 0;
+        }
+        return ventas[anio][mes] + calcularDemandaMes(ventas, anio - 1, mes);
+    }
+
     public static void main(String[] args) {
 
         double[][] inventarioPlata = new double[anios][meses];
@@ -76,6 +87,8 @@ public class Produccion {
         System.out.println("\nVentas:");
         imprimirArreglo(ventas, anios, meses);
 
+        System.out.println("Demanda stacional para el mes actual:");
+        System.out.println(calcularDemandaEstacional(ventas, mesActual));
         /*
         Arreglo con inventario actual
 
