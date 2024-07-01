@@ -76,6 +76,10 @@ public class Produccion {
         System.out.println("\nVentas:");
         imprimirArreglo(ventas);
 
+        System.out.println("\nInventario Ordenado:");
+        double[] ventasOrdenado = ordenarInventario(ventas);
+        imprimirArreglo1(ventasOrdenado);
+
         /*
         Arreglo con inventario actual
 
@@ -96,6 +100,13 @@ public class Produccion {
          */
     }
 
+    public static void imprimirArreglo1(double[] Arreglo) {
+        for (int i = 0; i < Arreglo.length; i++) {
+            System.out.printf("%8.2f ", Arreglo[i]);
+            System.out.println();
+        }
+    }
+
     public static void imprimirArreglo(double[][] Arreglo) {
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
@@ -106,8 +117,27 @@ public class Produccion {
     }
 
     public static double[] ordenarInventario(double[][] Arreglo) {
-
-        return null;
+        int totalMeses = anios * meses;
+        double[] inventarioTotalOrdenado = new double[totalMeses];
+        int indice = 0;
+        for (int i = 0; i < anios; i++) {
+            for (int j = 0; j < meses; j++) {
+                inventarioTotalOrdenado[indice++] = Arreglo[i][j];
+            }
+        }
+        //Ordenamiento del inventarioTotal
+        for (int i = 0; i < totalMeses-1; i++) {
+            int indiceTemp = i;
+            for (int j = i+1; j < totalMeses; j++) {
+                if (inventarioTotalOrdenado[indiceTemp] > inventarioTotalOrdenado[j]) {
+                    indiceTemp = j;
+                }
+            }
+            double temp = inventarioTotalOrdenado[indiceTemp];
+            inventarioTotalOrdenado[indiceTemp]=inventarioTotalOrdenado[i];
+            inventarioTotalOrdenado[i]=temp;
+        }
+        return inventarioTotalOrdenado;
     }
 
     /*
