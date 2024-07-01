@@ -1,9 +1,15 @@
 import java.util.Random;
 
 public class Produccion {
+    public static int anioActual = 2024;
+    public static int anioBase = 2022;
+    public static int mesActual = 6;
+    public static int anios = anioActual - anioBase + 1;
+    public static int meses = 12;
+
     public static void generarDataAleatoria(double[][] inventarioPlata, double[][] inventarioCobre,
                                             double[][] inventarioFundente, double[][] inventarioAcido,
-                                            double[][] inventarioGas, int anios, int meses) {
+                                            double[][] inventarioGas) {
         Random rand = new Random();
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
@@ -16,7 +22,7 @@ public class Produccion {
         }
     }
 
-    public static void generarVentaAleatoria (double[][] ventas, int anios, int meses) {
+    public static void generarVentaAleatoria (double[][] ventas) {
         Random rand = new Random();
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
@@ -27,11 +33,9 @@ public class Produccion {
 
     public static void ajustarAnioActual(double[][] inventarioPlata, double[][] inventarioCobre,
                                          double[][] inventarioFundente, double[][] inventarioAcido,
-                                         double[][] inventarioGas, double[][] ventas, int months,
-                                         int anioActual, int mesActual) {
-        int baseYear = 2022;
-        int iAnios = anioActual - baseYear;
-        for (int i = mesActual; i < months; i++) {
+                                         double[][] inventarioGas, double[][] ventas) {
+        int iAnios = anioActual - anioBase;
+        for (int i = mesActual; i < meses; i++) {
             inventarioPlata[iAnios][i] = 0;
             inventarioCobre[iAnios][i] = 0;
             inventarioFundente[iAnios][i] = 0;
@@ -43,9 +47,6 @@ public class Produccion {
 
     public static void main(String[] args) {
 
-        int anios = 3;
-        int meses = 12;
-
         double[][] inventarioPlata = new double[anios][meses];
         double[][] inventarioCobre = new double[anios][meses];
         double[][] inventarioFundente = new double[anios][meses];
@@ -53,9 +54,9 @@ public class Produccion {
         double[][] inventarioGas = new double[anios][meses];
         double[][] ventas = new double[anios][meses];
 
-        generarDataAleatoria(inventarioPlata, inventarioCobre, inventarioFundente, inventarioAcido, inventarioGas, anios, meses);
-        generarVentaAleatoria(ventas, anios, meses);
-        ajustarAnioActual(inventarioPlata, inventarioCobre, inventarioFundente, inventarioAcido, inventarioGas, ventas, meses, 2024, 6);
+        generarDataAleatoria(inventarioPlata, inventarioCobre, inventarioFundente, inventarioAcido, inventarioGas);
+        generarVentaAleatoria(ventas);
+        ajustarAnioActual(inventarioPlata, inventarioCobre, inventarioFundente, inventarioAcido, inventarioGas, ventas);
 
         System.out.println("Inventario de Plata Pura:");
         imprimirArreglo(inventarioPlata, anios, meses);
@@ -102,6 +103,10 @@ public class Produccion {
             }
             System.out.println();
         }
+    }
+    /*
+    public static double[] ordenarInventario(double[][] Arreglo, int anio, int meses) {
+
     }
 
     /*
