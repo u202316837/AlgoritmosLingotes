@@ -1,21 +1,16 @@
 import java.util.Random;
 
 public class Produccion {
-    /*
-    public static
-    Arreglo con datos del años anteriores
-     */
-
     public static void generarDataAleatoria(double[][] inventarioPlata, double[][] inventarioCobre,
                                             double[][] inventarioFundente, double[][] inventarioAcido,
                                             double[][] inventarioGas, int anios, int meses) {
         Random rand = new Random();
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
-                inventarioPlata[i][j] = 9000 + rand.nextDouble() * 2000; // Plata Pura aleatorioa entre 9000 y 11000 gramos para este caso
+                inventarioPlata[i][j] = 3000 + rand.nextDouble() * 7000; // Valores Aleatorios entre 3000 y 10000 gramos de plata pura
                 inventarioCobre[i][j] = (inventarioPlata[i][j] / 19);    // Cobre con valor cercano al 5% de la plata
                 inventarioFundente[i][j] = (inventarioPlata[i][j] / 10); // Fundente cercano al 10% de la plata
-                inventarioAcido[i][j] = (inventarioPlata[i][j] / 20);    // Ácido cercanao als 5% de la plata
+                inventarioAcido[i][j] = (inventarioPlata[i][j] / 20);    // Ácido cercano al 5% de la plata
                 inventarioGas[i][j] = (inventarioPlata[i][j] / 15);      // Gas cercano al 6.67% de la plata
             }
         }
@@ -49,7 +44,7 @@ public class Produccion {
     public static void main(String[] args) {
 
         int anios = 3;
-        int meses = 12;//a
+        int meses = 12;
 
         double[][] inventarioPlata = new double[anios][meses];
         double[][] inventarioCobre = new double[anios][meses];
@@ -114,9 +109,5 @@ public class Produccion {
      */
     /*
     metodo para calucar la cantidad optima de materiaprima
-     */
-
-    /*
-    prueba Git1
      */
 }
