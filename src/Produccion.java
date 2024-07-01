@@ -30,4 +30,8 @@ public class Produccion {
     /*
     metodo para calucar la cantidad optima de materiaprima
      */
+
+    /*
+    prueba Git1
+     */
 }
