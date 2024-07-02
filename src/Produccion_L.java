@@ -74,7 +74,6 @@ public class Produccion_L {
         return suma;
     }
 
-
     public static void main(String[] args) {
 
         double[][] inventarioPlata = new double[anios][meses];
@@ -109,34 +108,16 @@ public class Produccion_L {
         int[] resultado = historicoDemandaTrimestral(ventas);
         System.out.println("Trimestre con mayor demanda historica: " + resultado[0]);
         System.out.println("Cantidad promedio de demanda en ese trimestre: " + resultado[1]);
-
-        System.out.println("\nInventario Ordenado:");
-        double[] ventasOrdenado = ordenarInventario(ventas);
-        imprimir(ventasOrdenado);
+        System.out.println("-------------------------------------");
+        System.out.println("\nInventario de Plata Ordenado de Menor a Mayor:");
+        ordenarYVisualizarInventarioPlata(inventarioPlata);
+        System.out.println("-------------------------------------");
 
         // Reporte del mes con mayor venta de los años 2022, 2023 y 2024 usando método recursivo
         for (int year = 2022; year <= 2024; year++) {
             int mesMayorVenta = buscarMesMayorVenta(ventas, year, 0, 0);
             System.out.printf("Año %d: Mes con mayor venta es el %d con ventas de %.2f\n", year, mesMayorVenta + 1, ventas[year - 2022][mesMayorVenta]);
         }
-        /*
-        Arreglo con inventario actual
-
-        variable demandaDelMes = metodo de prediccion(mes)
-
-        condicion
-        inventario seria suficienciente
-            productos terminados
-        o
-        no es suficiente
-            comprar materia prima
-
-            productos terminados
-         */
-
-        /*
-        generar informe de datos de otros años o actual
-         */
     }
 
     public static void imprimir(double[] Arreglo) {
@@ -154,33 +135,69 @@ public class Produccion_L {
             System.out.println();
         }
     }
-    public static double[] ordenarInventario(double[][] Arreglo) {
+
+    public static void ordenarYVisualizarInventarioPlata(double[][] inventario) {
         int totalMeses = anios * meses;
-        double[] inventarioTotalOrdenado = new double[totalMeses];
+        ItemInventario[] items = new ItemInventario[totalMeses];
         int indice = 0;
+
         for (int i = 0; i < anios; i++) {
             for (int j = 0; j < meses; j++) {
-                inventarioTotalOrdenado[indice++] = Arreglo[i][j];
+                items[indice++] = new ItemInventario(inventario[i][j], anioBase + i, j + 1);
             }
         }
-        //Ordenamiento del inventarioTotal
-        for (int i = 0; i < totalMeses-1; i++) {
-            int indiceTemp = i;
-            for (int j = i+1; j < totalMeses; j++) {
-                if (inventarioTotalOrdenado[indiceTemp] > inventarioTotalOrdenado[j]) {
-                    indiceTemp = j;
+
+        items = bubbleSortItems(items);
+
+        for (ItemInventario item : items) {
+            System.out.printf("Plata: %.2f gramos, Año: %d, Mes: %d\n", item.valor, item.anio, item.mes);
+        }
+    }
+
+    public static ItemInventario[] bubbleSortItems(ItemInventario[] arr) {
+        int n = arr.length;
+        boolean swapped;
+        swapped = false;
+        for (int i = 0; i < n - 1; i++) {
+            if (arr[i].valor > arr[i + 1].valor) {
+                ItemInventario temp = arr[i];
+                arr[i] = arr[i + 1];
+                arr[i + 1] = temp;
+                swapped = true;
+            }
+        }
+        n--;
+        while (swapped) {
+            swapped = false;
+            for (int i = 0; i < n - 1; i++) {
+                if (arr[i].valor > arr[i + 1].valor) {
+                    ItemInventario temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    swapped = true;
                 }
             }
-            double temp = inventarioTotalOrdenado[indiceTemp];
-            inventarioTotalOrdenado[indiceTemp]=inventarioTotalOrdenado[i];
-            inventarioTotalOrdenado[i]=temp;
+            n--;
         }
-        return inventarioTotalOrdenado;
+        return arr;
+    }
+
+    static class ItemInventario {
+        double valor;
+        int anio;
+        int mes;
+
+        ItemInventario(double valor, int anio, int mes) {
+            this.valor = valor;
+            this.anio = anio;
+            this.mes = mes;
+        }
     }
 
     /*
-Método recursivo para buscar el mes con mayor venta en un año específico
- */
+    Método recursivo para buscar el mes con mayor venta en un año específico
+    */
+
     public static int buscarMesMayorVenta(double[][] ventas, int anio, int mesActual, int mesMax) {
         int baseYear = 2022;
         int iAnio = anio - baseYear;
@@ -195,11 +212,4 @@ Método recursivo para buscar el mes con mayor venta en un año específico
 
         return buscarMesMayorVenta(ventas, anio, mesActual + 1, mesMax);
     }
-
-    /*
-    metodo para pronosticar la demanda usando los datos del año pasado ver1
-     */
-    /*
-    metodo para calucar la cantidad optima de materiaprima
-     */
 }
