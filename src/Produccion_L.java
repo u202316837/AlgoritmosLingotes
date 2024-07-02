@@ -104,7 +104,7 @@ public class Produccion_L {
 
         System.out.println("\nVentas:");
         imprimirArreglo(ventas, anios, meses);
-
+//HOLA
         int[] resultado = historicoDemandaTrimestral(ventas);
         System.out.println("Trimestre con mayor demanda historica: " + resultado[0]);
         System.out.println("Cantidad promedio de demanda en ese trimestre: " + resultado[1]);
