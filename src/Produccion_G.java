@@ -75,11 +75,19 @@ public class Produccion_G {
     }
 
     //Metodo recursivo 2 demanda estimada siguiente trimestre
-    public static int predecirDemandaFutura(double[][] ventas, int anioActual, int trimestreActual) {
+    public static int[] predecirDemandaFuturaPorMeses(double[][] ventas, int anioActual, int trimestreActual) {
         double tasaCrecimiento = calcularTasaCrecimiento(ventas, anioActual, trimestreActual);
-        double demandaActual = demandaTrimestre(ventas, anioActual, trimestreActual);
-        double demandaFutura = demandaActual * (1 + tasaCrecimiento);
-        return (int) Math.round(demandaFutura);
+        int mesInicio = (trimestreActual + 1) * 3 % 12; // Mes de inicio del siguiente trimestre
+        int anioFuturo = (trimestreActual + 1) * 3 >= 12 ? anioActual + 1 : anioActual;
+
+        int[] demandaFutura = new int[3];
+        for (int i = 0; i < 3; i++) {
+            int mesActual = (mesInicio + i) % 12;
+            int anioEvaluar = (mesInicio + i) >= 12 ? anioFuturo : anioActual;
+            double demandaActual = ventas[anioEvaluar][mesActual];
+            demandaFutura[i] = (int) Math.round(demandaActual * (1 + tasaCrecimiento));
+        }
+        return demandaFutura;
     }
 
     private static double calcularTasaCrecimiento(double[][] ventas, int anioActual, int trimestreActual) {
@@ -128,8 +136,11 @@ public class Produccion_G {
         System.out.println("\nTrimestre con mayor demanda historica: " + resultado[0]);
         System.out.println("Cantidad promedio de demanda en ese trimestre: " + resultado[1]);
 
-        int demandaFutura = predecirDemandaFutura(ventas, anios - 1, resultado[0] - 1);
-        System.out.println("\nPredicción de demanda para el próximo trimestre : " + demandaFutura);
+        int[] demandaFutura = predecirDemandaFuturaPorMeses(ventas, anios - 1, resultado[0] - 1);
+        System.out.println("\nPredicción de demanda para el próximo trimestre:");
+        for (int i = 0; i < demandaFutura.length; i++) {
+            System.out.println("Mes " + ((resultado[0] % 4) * 3 + i + 1) + ": " + demandaFutura[i]);
+        }
 
         System.out.println("\nInventario Ordenado:");
         double[] ventasOrdenado = ordenarInventario(ventas);
