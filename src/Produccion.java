@@ -45,16 +45,35 @@ public class Produccion {
         }
     }
 
-    public static double calcularDemandaEstacional(double[][] ventas, int mes) {
-        return (int) calcularDemandaMes(ventas, ventas.length - 1, mes) / (double)ventas.length;
+    public static int[] historicoDemandaTrimestral(double[][] ventas) {
+        double[] trimestres = new double[4];
+        for (int i = 0; i < anios; i++) {
+            trimestres[0] += demandaTrimestre(ventas, i, 0);
+            trimestres[1] += demandaTrimestre(ventas, i, 1);
+            trimestres[2] += demandaTrimestre(ventas, i, 2);
+            trimestres[3] += demandaTrimestre(ventas, i, 3);
+        }
+
+        int mejorTrimestre = 0;
+        for (int i = 1; i < trimestres.length; i++) {
+            if (trimestres[i] > trimestres[mejorTrimestre]) {
+                mejorTrimestre = i;
+            }
+        }
+
+        double promedio = trimestres[mejorTrimestre] / anios;
+        return new int[] {mejorTrimestre + 1, (int) Math.round(promedio)};
     }
 
-    private static double calcularDemandaMes(double[][] ventas, int anio, int mes) {
-        if (anio < 0) {
-            return 0;
+    private static double demandaTrimestre(double[][] ventas, int anio, int trimestre) {
+        int mesInicio = trimestre * 3;
+        double suma = 0;
+        for (int i = 0; i < 3; i++) {
+            suma += ventas[anio][mesInicio + i];
         }
-        return ventas[anio][mes] + calcularDemandaMes(ventas, anio - 1, mes);
+        return suma;
     }
+
 
     public static void main(String[] args) {
 
@@ -87,8 +106,9 @@ public class Produccion {
         System.out.println("\nVentas:");
         imprimirArreglo(ventas, anios, meses);
 
-        System.out.println("Demanda stacional para el mes actual:");
-        System.out.println(calcularDemandaEstacional(ventas, mesActual));
+        int[] resultado = historicoDemandaTrimestral(ventas);
+        System.out.println("Trimestre con mayor demanda historica: " + resultado[0]);
+        System.out.println("Cantidad promedio de demanda en ese trimestre: " + resultado[1]);
 
         System.out.println("\nInventario Ordenado:");
         double[] ventasOrdenado = ordenarInventario(ventas);
