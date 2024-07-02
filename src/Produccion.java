@@ -113,6 +113,12 @@ public class Produccion {
         System.out.println("\nInventario Ordenado:");
         double[] ventasOrdenado = ordenarInventario(ventas);
         imprimir(ventasOrdenado);
+
+        // Reporte del mes con mayor venta de los años 2022, 2023 y 2024 usando método recursivo
+        for (int year = 2022; year <= 2024; year++) {
+            int mesMayorVenta = buscarMesMayorVenta(ventas, year, 0, 0);
+            System.out.printf("Año %d: Mes con mayor venta es el %d con ventas de %.2f\n", year, mesMayorVenta + 1, ventas[year - 2022][mesMayorVenta]);
+        }
         /*
         Arreglo con inventario actual
 
@@ -170,6 +176,24 @@ public class Produccion {
             inventarioTotalOrdenado[i]=temp;
         }
         return inventarioTotalOrdenado;
+    }
+
+    /*
+Método recursivo para buscar el mes con mayor venta en un año específico
+ */
+    public static int buscarMesMayorVenta(double[][] ventas, int anio, int mesActual, int mesMax) {
+        int baseYear = 2022;
+        int iAnio = anio - baseYear;
+
+        if (mesActual == ventas[iAnio].length) {
+            return mesMax;
+        }
+
+        if (ventas[iAnio][mesActual] > ventas[iAnio][mesMax]) {
+            mesMax = mesActual;
+        }
+
+        return buscarMesMayorVenta(ventas, anio, mesActual + 1, mesMax);
     }
 
     /*
