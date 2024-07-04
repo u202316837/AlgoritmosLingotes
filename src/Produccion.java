@@ -265,7 +265,7 @@ public class Produccion {
         }
         return demandaFutura;
     }
-
+// 3er metodo recursivo para calcular la tasa de crecimiento
     private static double calcularTasaCrecimiento(double[][] ventas, int anioActual, int trimestreActual) {
         if (anioActual <= 0) {
             return 0;
@@ -275,7 +275,7 @@ public class Produccion {
         double tasaCrecimiento = (demandaActual - demandaAnterior) / demandaAnterior;
         return tasaCrecimiento + calcularTasaCrecimiento(ventas, anioActual - 1, trimestreActual) / anioActual;
     }
-
+// 1er metodo de ordenamiento
     public static double[] ordenarInventario(double[][] Arreglo) {
         int totalMeses = anios * meses;
         double[] inventarioTotalOrdenado = new double[totalMeses];
@@ -373,7 +373,7 @@ public class Produccion {
     }
 
     /*
-    Método recursivo para buscar el mes con mayor venta en un año específico
+    1er Método de busqueda para el mes con mayor venta en un año específico
     */
     public static int buscarMesMayorVenta(double[][] ventas, int anio, int mesActual, int mesMax) {
         int baseYear = 2022;
@@ -389,6 +389,40 @@ public class Produccion {
 
         return buscarMesMayorVenta(ventas, anio, mesActual + 1, mesMax);
     }
+    //2do metodo de busqueda mes con mayor consuimo de inventario
+
+    public static int buscarMesMayorConsumoInventario(double[][] inventario, int anio, int mesActual, int mesMax) {
+        int baseYear = 2022;
+        int iAnio = anio - baseYear;
+
+        if (mesActual == inventario[iAnio].length) {
+            return mesMax;
+        }
+
+        if (inventario[iAnio][mesActual] < inventario[iAnio][mesMax]) {
+            mesMax = mesActual;
+        }
+
+        return buscarMesMayorConsumoInventario(inventario, anio, mesActual + 1, mesMax);
+    }
+
+    //3er metodo de busqueda Menor venta
+    public static int buscarMesMenorVenta(double[][] ventas, int anio, int mesActual, int mesMin) {
+        int baseYear = 2022;
+        int iAnio = anio - baseYear;
+
+        if (mesActual == ventas[iAnio].length) {
+            return mesMin;
+        }
+
+        if (ventas[iAnio][mesActual] < ventas[iAnio][mesMin]) {
+            mesMin = mesActual;
+        }
+
+        return buscarMesMenorVenta(ventas, anio, mesActual + 1, mesMin);
+    }
+
+    //Pila para gention de insumos
     public static void gestionarInsumos(Scanner scanner) {
         System.out.println("\n--- Gestión de Insumos ---");
         System.out.println("1. Plata");
