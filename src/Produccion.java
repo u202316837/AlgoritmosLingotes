@@ -99,7 +99,9 @@ public class Produccion {
             System.out.println("6. Mes con Mayor Venta por Año");
             System.out.println("7. Consumir o Aumentar Insumos");
             System.out.println("8. Ver Registro de Consumos y Aumentos");
-            System.out.println("9. Salir");
+            System.out.println("9. Gestionar Pedidos de Clientes");
+            System.out.println("10. Ver Pedidos de Clientes Pendientes");
+            System.out.println("11. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
 
@@ -177,6 +179,13 @@ public class Produccion {
                     break;
 
                 case 9:
+                    gestionarPedidosClientes(scanner);
+                    break;
+
+                case 10:
+                    verPedidosClientesPendientes();
+
+                case 11:
                     exit = true;
                     System.out.println("Saliendo del programa...");
                     break;
@@ -471,5 +480,81 @@ public class Produccion {
         System.out.printf("Gas: %.2f gramos\n", pilaGas[anioActual - anioBase].peek());
     }
 
-    //
+    // Método para gestionar pedidos de clientes desde el menú principal
+    public static void gestionarPedidosClientes(Scanner scanner) {
+        System.out.println("\n--- Gestión de Pedidos de Clientes ---");
+        System.out.println("1. Agregar Pedido");
+        System.out.println("2. Procesar Pedido");
+        System.out.print("Seleccione una opción: ");
+        int opcion = scanner.nextInt();
+        scanner.nextLine(); // Limpiar el buffer del scanner
+
+        switch (opcion) {
+            case 1:
+                System.out.print("Ingrese el nombre del cliente: ");
+                String cliente = scanner.nextLine();
+                System.out.print("Ingrese el producto (cadena de plata): ");
+                String producto = scanner.nextLine();
+                System.out.print("Ingrese la cantidad: ");
+                double cantidad = scanner.nextDouble();
+                agregarPedidoCliente(cliente, producto, cantidad);
+                break;
+            case 2:
+                procesarPedidoCliente();
+                break;
+            default:
+                System.out.println("Opción no válida.");
+        }
+    }
+
+    // Método para agregar un pedido de cliente a la cola
+    public static void agregarPedidoCliente(String cliente, String producto, double cantidad) {
+        colaPedidosClientes.offer(new PedidosClientes(cliente, producto, cantidad));
+        System.out.println("Pedido agregado: Cliente - " + cliente + ", Producto - " + producto + ", Cantidad - " + cantidad);
+    }
+    // Método para procesar un pedido de cliente de la cola
+    public static void procesarPedidoCliente() {
+        if (colaPedidosClientes.isEmpty()) {
+            System.out.println("No hay pedidos de clientes pendientes.");
+            return;
+        }
+        PedidosClientes pedido = colaPedidosClientes.poll();
+        System.out.println("Procesando pedido: Cliente - " + pedido.cliente + ", Producto - " + pedido.producto + ", Cantidad - " + pedido.cantidad);
+        // Lógica para procesar el pedido (consumir insumo del inventario)
+        gestionarInsumoParaPedidoCliente(pedido.producto, pedido.cantidad);
+    }
+
+    // Método para gestionar el consumo de insumos para un pedido de cliente
+    public static void gestionarInsumoParaPedidoCliente(String producto, double cantidad) {
+        Stack<Double>[] pila;
+
+        switch (producto.toLowerCase()) {
+            case "cadena de plata":
+                pila = pilaPlata;
+                break;
+            // Otros productos pueden ser añadidos aquí
+            default:
+                System.out.println("Producto no válido.");
+                return;
+        }
+
+        if (!pila[anioActual - anioBase].isEmpty()) {
+            pila[anioActual - anioBase].push(pila[anioActual - anioBase].pop() - cantidad);
+            registrarAccion(producto, "Consumir", cantidad);
+        } else {
+            System.out.println("No hay suficiente " + producto + " para el pedido.");
+        }
+    }
+
+    // Método para ver la cola de pedidos de clientes pendiente
+    public static void verPedidosClientesPendientes() {
+        if (colaPedidosClientes.isEmpty()) {
+            System.out.println("No hay pedidos de clientes pendientes.");
+        } else {
+            System.out.println("Pedidos de clientes pendientes:");
+            for (PedidosClientes pedido : colaPedidosClientes) {
+                System.out.println("Cliente: " + pedido.cliente + ", Producto: " + pedido.producto + ", Cantidad: " + pedido.cantidad);
+            }
+        }
+    }
 }
