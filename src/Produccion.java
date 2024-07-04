@@ -1,7 +1,5 @@
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Produccion {
@@ -13,18 +11,41 @@ public class Produccion {
     public static int anios = anioActual - anioBase + 1;
     public static int meses = 12;
 
+    // Pilas para cada insumo
+    public static Stack<Double>[] pilaPlata = new Stack[anios];
+    public static Stack<Double>[] pilaCobre = new Stack[anios];
+    public static Stack<Double>[] pilaFundente = new Stack[anios];
+    public static Stack<Double>[] pilaAcido = new Stack[anios];
+    public static Stack<Double>[] pilaGas = new Stack[anios];
+
+    // Variables para registrar las acciones
+    public static List<String> registroAcciones = new LinkedList<>();
+
+    //Cola para la gestion de pedidos
+    private static Queue<PedidosClientes> colaPedidosClientes = new LinkedList<>();
+
     //Metodo para Generar Data Aleatoria del Almacen
     public static void generarDataAleatoria(double[][] inventarioPlata, double[][] inventarioCobre,
                                             double[][] inventarioFundente, double[][] inventarioAcido,
                                             double[][] inventarioGas) {
         Random rand = new Random();
         for (int i = 0; i < anios; i++) {
+            pilaPlata[i] = new Stack<>();
+            pilaCobre[i] = new Stack<>();
+            pilaFundente[i] = new Stack<>();
+            pilaAcido[i] = new Stack<>();
+            pilaGas[i] = new Stack<>();
             for (int j = 0; j < meses; j++) {
                 inventarioPlata[i][j] = 3000 + rand.nextDouble() * 7000; // Valores Aleatorios entre 3000 y 10000 gramos de plata pura
                 inventarioCobre[i][j] = (inventarioPlata[i][j] / 19);    // Cobre con valor cercano al 5% de la plata
                 inventarioFundente[i][j] = (inventarioPlata[i][j] / 10); // Fundente cercano al 10% de la plata
                 inventarioAcido[i][j] = (inventarioPlata[i][j] / 20);    // Ácido cercano al 5% de la plata
                 inventarioGas[i][j] = (inventarioPlata[i][j] / 15);      // Gas cercano al 6.67% de la plata
+                pilaPlata[i].push(inventarioPlata[i][j]);
+                pilaCobre[i].push(inventarioCobre[i][j]);
+                pilaFundente[i].push(inventarioFundente[i][j]);
+                pilaAcido[i].push(inventarioAcido[i][j]);
+                pilaGas[i].push(inventarioGas[i][j]);
             }
         }
         //Ajustes los meses del año actual
@@ -66,9 +87,9 @@ public class Produccion {
         generarVentaAleatoria(ventas);
 
         Scanner scanner = new Scanner(System.in);
-        int opcion;
+        boolean exit = false;
 
-        do {
+        while (!exit) {
             System.out.println("\n--- Menú ---");
             System.out.println("1. Mostrar Inventarios");
             System.out.println("2. Mostrar Ventas");
@@ -76,9 +97,12 @@ public class Produccion {
             System.out.println("4. Predecir Demanda Futura");
             System.out.println("5. Ordenar y Visualizar Inventario de Plata");
             System.out.println("6. Mes con Mayor Venta por Año");
-            System.out.println("7. Salir");
+            System.out.println("7. Consumir o Aumentar Insumos");
+            System.out.println("8. Ver Registro de Consumos y Aumentos");
+            System.out.println("9. Salir");
             System.out.print("Seleccione una opción: ");
-            opcion = scanner.nextInt();
+            int opcion = scanner.nextInt();
+
             int[] resultado = historicoDemandaTrimestral(ventas);
 
             switch (opcion) {
@@ -145,6 +169,15 @@ public class Produccion {
                     break;
 
                 case 7:
+                    gestionarInsumos(scanner);
+                    break;
+
+                case 8:
+                    verRegistro();
+                    break;
+
+                case 9:
+                    exit = true;
                     System.out.println("Saliendo del programa...");
                     break;
 
@@ -152,7 +185,7 @@ public class Produccion {
                     System.out.println("Opción no válida. Por favor, intente nuevamente.");
                     break;
             }
-        } while (opcion != 7);
+        }
     }
 
     public static void imprimir(double[] Arreglo) {
@@ -347,4 +380,96 @@ public class Produccion {
 
         return buscarMesMayorVenta(ventas, anio, mesActual + 1, mesMax);
     }
+    public static void gestionarInsumos(Scanner scanner) {
+        System.out.println("\n--- Gestión de Insumos ---");
+        System.out.println("1. Plata");
+        System.out.println("2. Cobre");
+        System.out.println("3. Fundente");
+        System.out.println("4. Ácido");
+        System.out.println("5. Gas");
+        System.out.print("Seleccione un insumo: ");
+        int insumo = scanner.nextInt();
+
+        System.out.println("\n--- Acción ---");
+        System.out.println("1. Consumir");
+        System.out.println("2. Aumentar");
+        System.out.print("Seleccione una acción: ");
+        int accion = scanner.nextInt();
+
+        System.out.print("Ingrese la cantidad: ");
+        double cantidad = scanner.nextDouble();
+
+        modificarPila(insumo, accion, cantidad);
+    }
+
+    public static void modificarPila(int insumo, int accion, double cantidad) {
+        Stack<Double>[] pila = null;
+        String nombreInsumo = "";
+
+        switch (insumo) {
+            case 1:
+                pila = pilaPlata;
+                nombreInsumo = "Plata";
+                break;
+            case 2:
+                pila = pilaCobre;
+                nombreInsumo = "Cobre";
+                break;
+            case 3:
+                pila = pilaFundente;
+                nombreInsumo = "Fundente";
+                break;
+            case 4:
+                pila = pilaAcido;
+                nombreInsumo = "Ácido";
+                break;
+            case 5:
+                pila = pilaGas;
+                nombreInsumo = "Gas";
+                break;
+            default:
+                System.out.println("Insumo no válido.");
+                return;
+        }
+
+        if (accion == 1) {
+            // Consumir
+            if (!pila[anioActual - anioBase].isEmpty()) {
+                pila[anioActual - anioBase].push(pila[anioActual - anioBase].pop() - cantidad);
+                registrarAccion(nombreInsumo, "Consumir", cantidad);
+            } else {
+                System.out.println("No hay suficiente " + nombreInsumo + " para consumir.");
+            }
+        } else if (accion == 2) {
+            // Aumentar
+            pila[anioActual - anioBase].push(pila[anioActual - anioBase].pop() + cantidad);
+            registrarAccion(nombreInsumo, "Aumentar", cantidad);
+        } else {
+            System.out.println("Acción no válida.");
+        }
+    }
+
+    public static void registrarAccion(String insumo, String accion, double cantidad) {
+        String registro = String.format("%s: %s %.2f gramos", insumo, accion, cantidad);
+        registroAcciones.add(registro);
+    }
+
+    public static void verRegistro() {
+        System.out.println("\n--- Registro de Consumos y Aumentos ---");
+        if (registroAcciones.isEmpty()) {
+            System.out.println("No hay acciones registradas.");
+        } else {
+            for (String registro : registroAcciones) {
+                System.out.println(registro);
+            }
+        }
+        System.out.println("\n--- Estado Actual de los Insumos ---");
+        System.out.printf("Plata: %.2f gramos\n", pilaPlata[anioActual - anioBase].peek());
+        System.out.printf("Cobre: %.2f gramos\n", pilaCobre[anioActual - anioBase].peek());
+        System.out.printf("Fundente: %.2f gramos\n", pilaFundente[anioActual - anioBase].peek());
+        System.out.printf("Ácido: %.2f gramos\n", pilaAcido[anioActual - anioBase].peek());
+        System.out.printf("Gas: %.2f gramos\n", pilaGas[anioActual - anioBase].peek());
+    }
+
+    //
 }
